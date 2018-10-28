@@ -20,6 +20,7 @@
 #ifndef max31855_H
 #define max31855_H
 
+#include <stdint.h>
 
 /** @brief Returns thermocouple temperature for the MAX31855 chip in 
  *         degrees celcius.

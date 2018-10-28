@@ -4,14 +4,14 @@
  *       Filename:  max31855.h
  *
  *    Description:  Simple library for handling the data from the max31855 chip.
+ *                  Refer to https://github.com/afterthought325/max31855 for the
+ *                  latest code revision.
  *
  *        Version:  1.0
  *        Created:  10/28/2018 03:09:28 PM
- *       Revision:  none
  *       Compiler:  gcc
  *
  *         Author:  Chaise Farrar (chaise.farrar@gmail.com), 
- *   Organization:  IntelliRoast 
  *
  * =====================================================================================
  */
@@ -50,12 +50,12 @@ int16_t max31855toCelcius(uint8_t *pu8Data);
 int16_t max31855toCelcius_InternalRef(uint8_t *pu8Data);
 
 /**
- * @brief Returns true if the thermocouple is connected.
+ * @brief Returns true if the thermocouple is disconnected.
  * @param pu8Data: array of bytes read from max31855 over SPI 
  * @retval int
  */
 
-int max31855_ThermoCoupleConnected(uint8_t * pu8Data);
+int max31855_ThermoCoupleDisconnected(uint8_t * pu8Data);
 
 /**
  * \brief Return true if the leads are shorted to ground.
@@ -70,5 +70,12 @@ int max31855_ShortGND(uint8_t * pu8Data);
  * @retval int
  */
 int max31855_ShortVCC(uint8_t * pu8Data);
+
+/**
+ * \brief Return true if the thermocouple is disconnnected, shorted to ground, or shorted to VCC.
+ * @param pu8Data: array of bytes read from max31855 over SPI 
+ * @retval int
+ */
+int max31855_Error(uint8_t * pu8Data);
 
 #endif

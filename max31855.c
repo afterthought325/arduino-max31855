@@ -4,14 +4,14 @@
  *       Filename:  max31855.c
  *
  *    Description:  Simple library for handling the data from the max31855 chip.
+ *                  Refer to https://github.com/afterthought325/max31855 for the
+ *                  latest code revision.
  *
  *        Version:  1.0
  *        Created:  10/28/2018 03:09:28 PM
- *       Revision:  none
  *       Compiler:  gcc
  *
  *         Author:  Chaise Farrar (chaise.farrar@gmail.com), 
- *   Organization:  IntelliRoast 
  *
  * =====================================================================================
  */
@@ -57,17 +57,16 @@ int16_t max31855toCelcius_InternalRef(uint8_t *pu8Data) {
 
 
 /**
- * @brief Returns true if the thermocouple is connected.
+ * @brief Returns true if the thermocouple is disconnected.
  * @param pu8Data: array of bytes read from max31855 over SPI 
  * @retval int
  */
 
-int max31855_ThermoCoupleConnected(uint8_t * pu8Data) {
+int max31855_ThermoCoupleDisconnected(uint8_t * pu8Data) {
     // If the thermocouple is disconnected, then the first bit is set. 
     // So if you & the first byte with 0x01, then if its disconnected,
-    // it will return true, ! this to return true on connected and 
-    // false on disconnected.
-    return !(pu8Data[0] & 0x01);
+    // it will return true 
+    return (pu8Data[0] & 0x01);
 }
 
 /**
@@ -86,5 +85,16 @@ int max31855_ShortGND(uint8_t * pu8Data) {
  */
 int max31855_ShortVCC(uint8_t * pu8Data) {
     return (pu8Data[0] & 0x04);
+}
+
+/**
+ * \brief Return true if the thermocouple is disconnnected, shorted to ground, or shorted to VCC.
+ * @param pu8Data: array of bytes read from max31855 over SPI 
+ * @retval int
+ */
+int max31855_Error(uint8_t * pu8Data) {
+    // bit 16 of the 32 bits is set if bit [0:2] are set,
+    // indicating some kind of error.
+    return (pu8Data[1] & 0x01); 
 }
 

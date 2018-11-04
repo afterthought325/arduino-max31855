@@ -56,7 +56,7 @@ int16_t max31855toCelcius_InternalRef(uint8_t *pu8Data);
  * @retval int
  */
 
-int max31855_ThermoCoupleDisconnected(uint8_t * pu8Data);
+int max31855_Disconnected(uint8_t * pu8Data);
 
 /**
  * \brief Return true if the leads are shorted to ground.

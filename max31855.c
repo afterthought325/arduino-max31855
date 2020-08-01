@@ -22,7 +22,7 @@ int16_t max31855toCelcius(uint8_t *pu8Data) {
     uint16_t u16RawTemp;
     int16_t i16Celcius;
 
-	u16RawTemp = pu8Data[0]; //The Thermocouple temperature is stored in the upper 14 bits, bit 16 & 17 are not needed.
+    u16RawTemp = pu8Data[0]; //The Thermocouple temperature is stored in the upper 14 bits, bit 16 & 17 are not needed.
     u16RawTemp <<= 8;
     u16RawTemp |= pu8Data[1];
     

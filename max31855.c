@@ -18,7 +18,7 @@
 #include "max31855.h"
 
 
-int16_t max31855toCelcius(uint8_t *pu8Data) {
+int16_t max31855_to_celcius(uint8_t *pu8Data) {
     uint16_t u16RawTemp;
     int16_t i16Celcius;
 
@@ -37,8 +37,13 @@ int16_t max31855toCelcius(uint8_t *pu8Data) {
     return i16Celcius;
 }
 
+int16_t max31855_to_fahrenheit(uint8_t *pu8Data) {
+    int16_t i16celcius = max31855_to_celcius(pu8Data):
+    return celcius_to_fahrenheit(i16celcius);
+}
 
-int16_t max31855toCelcius_InternalRef(uint8_t *pu8Data) {
+
+int16_t max31855_to_celcius_int_ref(uint8_t *pu8Data) {
     uint16_t *pu16Data = (uint16_t *) pu8Data;
     uint16_t u16RawTemp = pu16Data[0]; //The Reference temp is stored in bits [15:4], bits [3:0] are not needed.
     int16_t i16Celcius;
@@ -55,44 +60,35 @@ int16_t max31855toCelcius_InternalRef(uint8_t *pu8Data) {
     return i16Celcius;
 }
 
+int16_t max31855_to_fahrenheit_int_ref(uint8_t *pu8Data) {
+    int16_t i16Celcius = max31855_to_celcius_int_ref(pu8Data);
+    return celcius_to_fahrenheit(i16celcius);
+}
 
-/**
- * @brief Returns true if the thermocouple is disconnected.
- * @param pu8Data: array of bytes read from max31855 over SPI 
- * @retval int
- */
+int16_t celcius_to_fahrenheit(int16_t i16celcius){
+    int16_t i16fahrenheit = (9 * i16celcius) + 160;
+    int16_t i16remainder = i16fahrenheit % 5;
+    i16fahrenheit /= 5;
+    if(i16remainder >= 3) i16fahrenheit++;
+    return i16fahrenheit;
+}
 
-int max31855_Disconnected(uint8_t * pu8Data) {
+int max31855_disconnected(uint8_t * pu8Data) {
     // If the thermocouple is disconnected, then the first bit is set. 
     // So if you & the first byte with 0x01, then if its disconnected,
     // it will return true 
     return (pu8Data[3] & 0x01);
 }
 
-/**
- * \brief Return true if the leads are shorted to ground.
- * @param pu8Data: array of bytes read from max31855 over SPI 
- * @retval int
- */
-int max31855_ShortGND(uint8_t * pu8Data) {
+int max31855_short_gnd(uint8_t * pu8Data) {
     return (pu8Data[3] & 0x02);
 }
 
-/**
- * \brief Return true if the leads are shorted to VCC.
- * @param pu8Data: array of bytes read from max31855 over SPI 
- * @retval int
- */
-int max31855_ShortVCC(uint8_t * pu8Data) {
+int max31855_short_vcc(uint8_t * pu8Data) {
     return (pu8Data[3] & 0x04);
 }
 
-/**
- * \brief Return true if the thermocouple is disconnnected, shorted to ground, or shorted to VCC.
- * @param pu8Data: array of bytes read from max31855 over SPI 
- * @retval int
- */
-int max31855_Error(uint8_t * pu8Data) {
+int max31855_error(uint8_t * pu8Data) {
     // bit 16 of the 32 bits is set if bit [0:2] are set,
     // indicating some kind of error.
     return (pu8Data[1] & 0x01); 
